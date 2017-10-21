@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--RealGrid는 Jquery없이도 사용할 수 있습니다.-->
+    <script type="text/javascript" src="/script/jquery-3.2.1.js"></script>
+    <!--realgrid-->
+    <script type="text/javascript" src="/script/realgridjs-lic.js"></script>
+    <script type="text/javascript" src="/script/realgridjs_eval.1.1.25.min.js"></script>
+    <script type="text/javascript" src="/script/realgridjs-api.1.1.25.js"></script>
+    <script type="text/javascript" src="/script/jszip.min.js"></script>
+
+    <script>
+        var gridView;
+        var dataProvider;
+
+        $(document).ready(function () {
+            RealGridJS.setRootContext("/script");
+
+            dataProvider = new RealGridJS.LocalDataProvider();
+            gridView = new RealGridJS.GridView("realgrid");
+            gridView.setDataSource(dataProvider);
+
+            var fields = [
+                {
+                    fieldName: "no"
+                },
+                {
+                    fieldName: "id"
+                },
+                {
+                    fieldName: "name"
+                },
+                {
+                    fieldName: "phone"
+                }
+            ];
+
+            dataProvider.setFields(fields);
+
+            var columns = [
+                {
+                    name: "no",
+                    fieldName: "no",
+                    header: {
+                        text: "no"
+                    },
+                    width: 50
+                },
+                {
+                    name: "id",
+                    fieldName: "id",
+                    header: {
+                        text: "id"
+                    },
+                    width: 200
+                },
+                {
+                    name: "name",
+                    fieldName: "name",
+                    header: {
+                        text: "name"
+                    },
+                    width: 200
+                },
+                {
+                    name: "phone",
+                    fieldName: "phone",
+                    header: {
+                        text: "phone"
+                    },
+                    width: 200
+                }
+            ];
+
+            gridView.setColumns(columns);
+
+            /*
+             var data = [
+             {field1: "value1", field2: "value2"}
+             ];
+
+             dataProvider.setRows(data);*/
+
+            $("#btnFillJson").click(function () {
+                $.ajax({
+                           url: "http://localhost:8080/users",
+                           cache: false
+                       })
+                        .done(function (data) {
+                            dataProvider.fillJsonData(data, {
+                                fillMode: "append"
+                            });
+                        });
+            });
+
+        });
+
+
+    </script>
+</head>
+
+<body>
+<button type="button" class="btn btn-primary btn-xs" id="btnFillJson">json</button>
+<div id="realgrid" style="width: 100%; height: 600px;"></div>
+</body>
+</html>
